@@ -1,40 +1,52 @@
 import React, {useState} from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import './App.css';
-import {ADMIN, USER} from "./constans/usersRole";
-import withMainLayout from './hoc/MainLayout';
+import {ADMIN,USER} from "./constans/usersRole";
 import withAdminLayout from './hoc/AdminLayout';
 import Catalog from "./views/Catalog";
 import CreateItem from "./views/CreateItem";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {addItem, deleteItem, deleteItems, initItems,} from "./redux/actions/item";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import Container from "@material-ui/core/Container";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+    }
+}));
 
 function App({items,initItems,deleteItem, deleteItems,addItem}) {
-  const [role, setRole] = useState(ADMIN);
-  const CatalogPage = withMainLayout(Catalog,role,items,deleteItems);
-  const CreateItemPage = withAdminLayout(CreateItem,role,items,deleteItems);
+    const classes = useStyles();
+    const [role, setRole] = useState(ADMIN);
+    const CreateItemPage = withAdminLayout(CreateItem,role);
 
-  React.useEffect(() => { initItems() }, [initItems]);
+    React.useEffect(() => { initItems() }, [initItems]);
 
-  return (
-    <React.Fragment>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <CatalogPage items={items} deleteItem={deleteItem}/>
-          </Route>
-          <Route exact path="/addItem">
-             <CreateItemPage addItem={addItem}/>
-          </Route>
-        </Switch>
-      </Router>
-    </ React.Fragment>
-  );
+    return (
+        <div className={classes.root}>
+            <Container maxWidth="lg">
+                <Router>
+                <Navbar />
+                <br/>
+                    <Switch>
+                        <Route exact path="/">
+                            <Catalog role={role} items={items} deleteItem={deleteItem}/>
+                        </Route>
+                        <Route exact path="/addItem">
+                            <CreateItemPage addItem={addItem}/>
+                        </Route>
+                    </Switch>
+                </Router>
+            </Container>
+            <Footer items={items} role={role} deleteItems={deleteItems}/>
+        </div>
+    );
 }
 
 App.propTypes = {
@@ -45,7 +57,7 @@ App.propTypes = {
             itemName: PropTypes.string,
             description: PropTypes.string,
             imgUrl: PropTypes.string,
-            price: PropTypes.string
+            price: PropTypes.number
         })
     ),
     initItems:PropTypes.func,
