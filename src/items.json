@@ -1,0 +1,51 @@
+[
+  {
+    "id": 0,
+    "itemName": "Jeep",
+    "description": "Super jeep",
+    "imgUrl": "https://picsum.photos/id/514/200/300",
+    "price": 14000
+  },
+  {
+    "id": 1,
+    "itemName": "Left bugatti",
+    "description": "New bugatti",
+    "imgUrl": "https://picsum.photos/id/133/200/300",
+    "price": 5000
+  },
+  {
+    "id": 2,
+    "itemName": "Continental",
+    "description": "Very cool continental",
+    "imgUrl": "https://picsum.photos/id/1071/200/300",
+    "price": 29000
+  },
+  {
+    "id": 3,
+    "itemName": "Scooby-Doo bus",
+    "description": "Legendary bus",
+    "imgUrl": "https://picsum.photos/id/655/200/300",
+    "price": 7000
+  },
+  {
+    "id": 4,
+    "itemName": "Farmer-boy",
+    "description": "Pafos",
+    "imgUrl": "https://picsum.photos/id/111/200/300",
+    "price": 30000
+  },
+  {
+    "id": 5,
+    "itemName": "Volkswagen",
+    "description": "Just a bus",
+    "imgUrl": "https://picsum.photos/id/183/200/300",
+    "price": 9000
+  },
+  {
+    "id": 6,
+    "itemName": "Tramway",
+    "description": "Special price",
+    "imgUrl": "https://picsum.photos/id/419/200/300",
+    "price": 59999
+  }
+]
