@@ -1,23 +1,16 @@
 import data from "../../items.json";
 import {ITEM_ADD, ITEM_DELETE, ITEMS_DELETE, ITEMS_START} from "./actionTypes";
 
-export function initItems() {
-    return dispatch => {
+export const initItems = () => (dispatch) => {
         localStorage.setItem("items",JSON.stringify(data));
 
-        dispatch(itemsStart(data));
-    }
+        dispatch({
+            type: ITEMS_START,
+            payload:data
+        });
 }
 
-export function itemsStart(items) {
-    return{
-        type: ITEMS_START,
-        items
-    }
-}
-
-export function addItem(item) {
-    return async (dispatch,getState) => {
+export const addItem = (item) => async (dispatch,getState) => {
         const items = getState().item.items;
 
         const newId = items.length !== 0 ? items[items.length-1].id : 0;
@@ -33,44 +26,29 @@ export function addItem(item) {
         res = [...res, newItem]
         localStorage.setItem("items",JSON.stringify(res))
 
-        dispatch(itemAdd(newItem))
-    }
+        dispatch({
+            type: ITEM_ADD,
+            payload: newItem
+        })
 }
 
-export function itemAdd(item) {
-    return{
-        type: ITEM_ADD,
-        item
-    }
-}
-
-export function deleteItem(id) {
-    return async dispatch =>{
+export const deleteItem = (id) => async (dispatch) => {
         let res = await JSON.parse(localStorage.getItem("items"))
         res = res.filter(el => el.id !== id)
         localStorage.setItem("items",JSON.stringify(res))
 
-        dispatch(itemDelete(id))
-    }
+        dispatch({
+            type: ITEM_DELETE,
+            payload:id
+        })
 }
 
-export function itemDelete(id) {
-    return{
-        type: ITEM_DELETE,
-        id
-    }
-}
 
-export function deleteItems() {
-    return dispatch => {
+export const deleteItems = () => (dispatch) =>{
         localStorage.setItem("items","[]")
-        dispatch(itemsDelete())
-    }
-}
 
-export function itemsDelete() {
-    return{
-        type: ITEMS_DELETE
-    }
+        dispatch({
+            type: ITEMS_DELETE
+        })
 }
 

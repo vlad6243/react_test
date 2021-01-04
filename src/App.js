@@ -5,8 +5,7 @@ import {ADMIN,USER} from "./constans/usersRole";
 import withAdminLayout from './hoc/AdminLayout';
 import Catalog from "./views/Catalog";
 import CreateItem from "./views/CreateItem";
-import {connect} from "react-redux";
-import PropTypes from "prop-types";
+import {useDispatch, useSelector} from "react-redux";
 import {addItem, deleteItem, deleteItems, initItems,} from "./redux/actions/item";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Container from "@material-ui/core/Container";
@@ -21,12 +20,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function App({items,initItems,deleteItem, deleteItems,addItem}) {
+export default function App() {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const items = useSelector(({ item }) => item.items);
     const [role, setRole] = useState(ADMIN);
     const CreateItemPage = withAdminLayout(CreateItem,role);
 
-    React.useEffect(() => { initItems() }, [initItems]);
+    const itemDelete = React.useCallback((id) => {
+        dispatch(deleteItem(id))
+    },[dispatch])
+
+    const itemAdd = React.useCallback((item) => {
+        dispatch(addItem(item))
+    },[dispatch])
+
+    const itemsDelete = React.useCallback(() => {
+        dispatch(deleteItems())
+    },[dispatch])
+
+    React.useEffect(() => {
+        dispatch(initItems());
+    }, [dispatch]);
 
     return (
         <div className={classes.root}>
@@ -36,49 +51,15 @@ function App({items,initItems,deleteItem, deleteItems,addItem}) {
                 <br/>
                     <Switch>
                         <Route exact path="/">
-                            <Catalog role={role} items={items} deleteItem={deleteItem}/>
+                            <Catalog role={role} items={items} deleteItem={itemDelete}/>
                         </Route>
                         <Route exact path="/addItem">
-                            <CreateItemPage addItem={addItem}/>
+                            <CreateItemPage addItem={itemAdd}/>
                         </Route>
                     </Switch>
                 </Router>
             </Container>
-            <Footer items={items} role={role} deleteItems={deleteItems}/>
+            <Footer items={items} role={role} deleteItems={itemsDelete}/>
         </div>
     );
 }
-
-App.propTypes = {
-    role:PropTypes.string,
-    items:PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.number,
-            itemName: PropTypes.string,
-            description: PropTypes.string,
-            imgUrl: PropTypes.string,
-            price: PropTypes.number
-        })
-    ),
-    initItems:PropTypes.func,
-    deleteItem:PropTypes.func,
-    deleteItems:PropTypes.func,
-    addItem:PropTypes.func
-
-}
-
-function mapStateToProps(state) {
-  return{
-    items: state.item.items
-  }
-}
-function mapDispatchToProps(dispatch) {
-  return{
-      initItems: () => dispatch(initItems()),
-      deleteItem: (id) => dispatch(deleteItem(id)),
-      deleteItems: () => dispatch(deleteItems()),
-      addItem: (item) => dispatch(addItem(item)),
-  }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(App);
