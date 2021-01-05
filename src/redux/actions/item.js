@@ -1,13 +1,23 @@
 import data from "../../items.json";
 import {ITEM_ADD, ITEM_DELETE, ITEMS_DELETE, ITEMS_START} from "./actionTypes";
 
-export const initItems = () => (dispatch) => {
-        localStorage.setItem("items",JSON.stringify(data));
+export const initItems = () => async (dispatch) => {
+        const storageData = await JSON.parse(localStorage.getItem("items"));
+        if(storageData !== null){
 
-        dispatch({
-            type: ITEMS_START,
-            payload:data
-        });
+            dispatch({
+                type: ITEMS_START,
+                payload:storageData
+            });
+            
+        }else{
+            localStorage.setItem("items",JSON.stringify(data));
+
+            dispatch({
+                type: ITEMS_START,
+                payload:data
+            });
+        }
 }
 
 export const addItem = (item) => async (dispatch,getState) => {

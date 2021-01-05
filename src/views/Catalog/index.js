@@ -1,8 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import CatalogItem from "../../components/CatalogItem";
 
-function Catalog({role,items,deleteItem}) {
+export default function Catalog({role,items,deleteItem}) {
     return(
         <div>
             <Grid container
@@ -22,4 +23,16 @@ function Catalog({role,items,deleteItem}) {
     )
 }
 
-export default Catalog;
+Catalog.prototype = {
+    role:PropTypes.string,
+    items:PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            itemName: PropTypes.string,
+            description: PropTypes.string,
+            imgUrl: PropTypes.string,
+            price: PropTypes.number
+        })
+    ),
+    deleteItem:PropTypes.func
+}
